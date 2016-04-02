@@ -1,0 +1,52 @@
+MongoDB Notes
+
+V3 uses new storage engine API - can be pluggable to extend with new capabilities
+MMAPv1 (default)
+WiredTiger
+
+mongod --storageEngine WiredTiger
+
+MongoDB to process an op on an object, that object must be in memory
+
+If working set > available mem on a single server -> shard across multiple servers
+
+Pay attn to “read-ahead” setting, too large is not good.
+
+Security - https://docs.mongodb.org/master/MongoDB-security-guide-master.pdf
+
+Secondary indexing capabilities for query performance optimization
+
+Issue updates as find and set operations; don’t perform document rewrites
+Rather than retrieving the entire document in your application, updating fields and then saving the document back to the db, instead use find and set operators to issue the update to specific fields => less network usage, fewer round trips, fewer unnecessary index updates
+
+Avoid negation in queries if possible - if negation is the only condition, all records need to be scanned
+
+Run explain() on every query - https://docs.mongodb.org/manual/reference/method/cursor.explain/?_ga=1.129262028.1780282658.1457421597
+
+Use covered queries when possible - returns results from indexes directly w/o accessing documents (all fields in the query must be present in the index) 
+explain() output displays true for the indexOnly field
+
+To increase read capacity in your system consider sharding
+
+Use small field names
+
+Avoid indexes on low cardinality fields
+
+Avoid regex - leading wildcards may result in full index scans
+
+Readahead size should be set to 32 or the size of most documents, whichever is larger
+
+Disable access time settings in file system
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-scalable-mongodb-database
+http://unix.stackexchange.com/questions/219015/how-to-disable-access-time-settings-in-debian-linux
+
+mongoperf 
+http://unix.stackexchange.com/questions/219015/how-to-disable-access-time-settings-in-debian-linux
+http://blog.mongodb.org/post/40769806981/checking-disk-performance-with-the-mongoperf
+
+ulimit - https://docs.mongodb.org/manual/reference/ulimit/#recommended-ulimit-settings
+
+hugepage - http://stackoverflow.com/questions/29441679/why-does-mongodb-complain-about-transparent-hugepage
+
+
+
